@@ -1,1 +1,13 @@
-
+spring:
+  datasource:
+    url: jdbc:postgresql://localhost:5432/parking-control-db
+    username: postgres
+    password: temperosoft_psql
+  jpa:
+    hibernate:
+      ddl-auto: update
+    properties:
+      hibernate:
+        jdbc:
+          lob:
+            nom_contextual_creation: true
