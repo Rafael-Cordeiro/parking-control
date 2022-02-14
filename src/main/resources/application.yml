@@ -1,4 +1,11 @@
+server:
+  servlet:
+    context-path: /api
+  port: '9999'
 spring:
+  jackson:
+    serialization:
+      fail-on-empty-beans: false
   datasource:
     url: jdbc:postgresql://localhost:5432/parking-control-db
     username: postgres
