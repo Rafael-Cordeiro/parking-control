@@ -12,8 +12,6 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 
 import lombok.Data;
-import lombok.Getter;
-import lombok.Setter;
 
 @Entity
 @Table(name="TB_PARKING_SPOT")
@@ -31,13 +29,13 @@ public class ParkingSpot implements Serializable {
 	@Column(nullable=false, unique=true, length=7)
 	private String licensePlateCar;
 	
-	@Column(nullable=false, unique=true, length=70)
+	@Column(nullable=false, length=70)
 	private String brandCar;
 	
-	@Column(nullable=false, unique=true, length=70)
+	@Column(nullable=false, length=70)
 	private String modelCar;
 	
-	@Column(nullable=false, unique=true, length=70)
+	@Column(nullable=false, length=70)
 	private String colorCar;
 	
 	@Column(nullable=false)
