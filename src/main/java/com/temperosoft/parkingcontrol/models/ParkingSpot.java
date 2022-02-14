@@ -11,16 +11,25 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
+import org.hibernate.annotations.GenericGenerator;
+import org.hibernate.annotations.Type;
+
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
 import lombok.Data;
 
 @Entity
 @Table(name="TB_PARKING_SPOT")
+@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 @Data
 public class ParkingSpot implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	@Id
-	@GeneratedValue(strategy=GenerationType.AUTO)
+	@GeneratedValue(strategy=GenerationType.AUTO, generator = "uuid2")
+	@GenericGenerator(name="uuid2", strategy="uuid2")
+	@Type(type="uuid-binary")
+	@Column(name="id", columnDefinition="BINARY(16)")
 	private UUID id;
 	
 	@Column(nullable=false, unique=true, length=10)

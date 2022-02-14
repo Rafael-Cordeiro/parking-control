@@ -7,9 +7,9 @@ spring:
     serialization:
       fail-on-empty-beans: false
   datasource:
-    url: jdbc:postgresql://localhost:5432/parking-control-db
-    username: postgres
-    password: temperosoft_psql
+    url: jdbc:mysql://localhost:3306/parking-control-db
+    username: root
+    password:
   jpa:
     hibernate:
       ddl-auto: update
