@@ -2,7 +2,6 @@ package com.temperosoft.parkingcontrol.controllers;
 
 import java.time.LocalDateTime;
 import java.time.ZoneId;
-import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -10,6 +9,10 @@ import javax.validation.Valid;
 
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -49,13 +52,13 @@ public class ParkingSpotController {
 		if(parkingSpotService.existsByApartmentAndBlock(parkingSpot.getApartment(), parkingSpot.getBlock()))
 			return ResponseEntity.status(HttpStatus.CONFLICT).body("Conflict: Parking Spot already registered for this apartment/block!");
 		
-		parkingSpot.setRegistrationTime(LocalDateTime.now(ZoneId.of("UTC")));
+		parkingSpot.setRegistrationDate(LocalDateTime.now(ZoneId.of("UTC")));
 		return ResponseEntity.status(HttpStatus.CREATED).body(parkingSpotService.save(parkingSpot));
 	}
 	
 	@GetMapping
-	public ResponseEntity<List<ParkingSpot>> getAllParkingSpots() {
-		return ResponseEntity.status(HttpStatus.OK).body(parkingSpotService.findAll());
+	public ResponseEntity<Page<ParkingSpot>> getAllParkingSpots(@PageableDefault(page=0, size=10, sort="id", direction=Sort.Direction.ASC) Pageable pageable) {
+		return ResponseEntity.status(HttpStatus.OK).body(parkingSpotService.findAll(pageable));
 	}
 	
 	@GetMapping("/{id}")
@@ -89,7 +92,7 @@ public class ParkingSpotController {
 		var parkingSpot = new ParkingSpot();
 		BeanUtils.copyProperties(parkingSpotDTO, parkingSpot);
 		parkingSpot.setId(parkingSpotOptional.get().getId());
-		parkingSpot.setRegistrationTime(LocalDateTime.now(ZoneId.of("UTC")));
+		parkingSpot.setRegistrationDate(LocalDateTime.now(ZoneId.of("UTC")));
 		
 		
 		return ResponseEntity.status(HttpStatus.OK).body(parkingSpotService.save(parkingSpot));
