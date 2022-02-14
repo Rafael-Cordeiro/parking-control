@@ -1,6 +1,8 @@
 package com.temperosoft.parkingcontrol.services;
 
 import java.util.List;
+import java.util.Optional;
+import java.util.UUID;
 
 import javax.transaction.Transactional;
 
@@ -35,6 +37,11 @@ public class ParkingSpotService {
 	
 	public List<ParkingSpot> findAll() {
 		return parkingSpotRepository.findAll();
+	}
+	
+	@Transactional
+	public Optional<ParkingSpot> findById(UUID id) {
+		return Optional.ofNullable(parkingSpotRepository.getById(id));
 	}
 
 }
