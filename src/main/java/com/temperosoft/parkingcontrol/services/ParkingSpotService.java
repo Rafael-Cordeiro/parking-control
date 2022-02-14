@@ -43,5 +43,9 @@ public class ParkingSpotService {
 	public Optional<ParkingSpot> findById(UUID id) {
 		return Optional.ofNullable(parkingSpotRepository.getById(id));
 	}
+	
+	public void delete(ParkingSpot parkingSpot) {
+		parkingSpotRepository.delete(parkingSpot);
+	}
 
 }
