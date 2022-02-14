@@ -21,7 +21,7 @@ import com.temperosoft.parkingcontrol.services.ParkingSpotService;
 
 @RestController
 @CrossOrigin(origins="*", maxAge=3600)
-@RequestMapping("/parking-spot")
+@RequestMapping("parking-spot")
 public class ParkingSpotController {
 	
 	@Autowired
@@ -29,9 +29,21 @@ public class ParkingSpotController {
 	
 	@PostMapping
 	public ResponseEntity<Object> saveParkingSpot(@RequestBody @Valid ParkingSpotDTO parkingSpotDTO) {
+		
 		var parkingSpot = new ParkingSpot();
 		BeanUtils.copyProperties(parkingSpotDTO, parkingSpot);
+		
+		if(parkingSpotService.existsByLicensePlateCar(parkingSpot.getLicensePlateCar()))
+			return ResponseEntity.status(HttpStatus.CONFLICT).body("Conflict: License Plate Car is already in use!");
+		
+		if(parkingSpotService.existsByParkingSpotNumber(parkingSpot.getParkingSpotNumber()))
+			return ResponseEntity.status(HttpStatus.CONFLICT).body("Conflict: Parking Spot is already in use!");
+		
+		if(parkingSpotService.existsByApartmentAndBlock(parkingSpot.getApartment(), parkingSpot.getBlock()))
+			return ResponseEntity.status(HttpStatus.CONFLICT).body("Conflict: Parking Spot already registered for this apartment/block!");
+		
 		parkingSpot.setRegistrationTime(LocalDateTime.now(ZoneId.of("UTC")));
 		return ResponseEntity.status(HttpStatus.CREATED).body(parkingSpotService.save(parkingSpot));
 	}
+		
 }
