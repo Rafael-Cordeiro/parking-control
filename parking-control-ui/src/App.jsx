@@ -1,10 +1,11 @@
-import React, {useState} from "react"
+import React, {useState, useEffect} from "react"
 import Axios from "axios"
 import './App.css';
-import Card from './components/Card'
+import Card from './components/Card/Card'
 
 function App() {
   const [values, setValues] = useState();
+  const [listParkingSpot, setListParkingSpot] = useState();
   console.log(values)
 
   const handleChangeValues = value => {
@@ -25,12 +26,24 @@ function App() {
         apartment: values.apartment,
         block: values.block
       }).then((response) => {
-        console.log(response.data)
+        const { data } = response
+        console.log(data)
+        var list = listParkingSpot.slice()
+        list.push(data)
+        setListParkingSpot(list)
         alert(`${response.status} - Submited!`)
       }).catch(error => {
         alert(`Status ${error.response.status} - ${error.response.data}`)
       })
   }
+
+  useEffect(() => {
+    Axios.get('http://localhost:9999/api/parking-spot')
+    .then(response => {
+      setListParkingSpot(response.data.content)
+      console.log(response.data.content)
+    })
+  }, [])
 
   return (
     <div className="app--container">
@@ -94,6 +107,17 @@ function App() {
         />
         <button className="register--button" onClick={() => handleSubmit()}>Submit</button>
       </div>
+      { typeof listParkingSpot !== "undefined" && listParkingSpot.map(value => {
+        return (
+          <Card
+            key={value.id}
+            listCard={listParkingSpot}
+            setListCard={setListParkingSpot}
+            id={value.id}
+            entity={value}
+          ></Card>
+        )
+      }) }
     </div>
   );
 }
